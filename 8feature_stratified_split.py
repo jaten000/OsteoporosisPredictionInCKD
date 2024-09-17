@@ -9,7 +9,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 # 1. 匯入資料
-file_path = "C:/Users/jatenhsu/Desktop/ckdosteoporosis/Data.csv"
+file_path = "C:/...../Data.csv"
 data = pd.read_csv(file_path)
 
 # 2. 只保留 outcome 和指定的 features
@@ -38,8 +38,8 @@ print(train_data.head())
 print(test_data.head())
 
 # 6. 將 train_data 和 test_data 存成 CSV 檔案
-train_file_path = "C:/Users/jatenhsu/Desktop/ckdosteoporosis/train_data.csv"
-test_file_path = "C:/Users/jatenhsu/Desktop/ckdosteoporosis/test_data.csv"
+train_file_path = "C:/...../train_data.csv"
+test_file_path = "C:/...../test_data.csv"
 
 # 儲存訓練集和測試集
 train_data.to_csv(train_file_path, index=False)
