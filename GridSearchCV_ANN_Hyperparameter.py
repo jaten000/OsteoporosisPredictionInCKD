@@ -23,7 +23,7 @@ import seaborn as sns
 import numpy as np
 
 # 1. 匯入資料
-train_file_path = "C:/Users/jatenhsu/Desktop/ckdosteoporosis/train_data.csv"
+train_file_path = "C:/...../train_data.csv"
 data = pd.read_csv(train_file_path)
 
 # 2. 分割資料，確保 "Osteoporosis" 比例接近
@@ -183,7 +183,7 @@ for model_name, model in models.items():
     print(f"{model_name}: Accuracy: {accuracy:.2f}, Precision: {precision:.2f}, Recall: {recall:.2f}, F1: {f1:.2f}, AUC: {auc:.2f}")
 
 # 7. 匯入 test_data，補缺失值與標準化
-test_file_path = "C:/Users/jatenhsu/Desktop/ckdosteoporosis/test_data.csv"
+test_file_path = "C:/...../test_data.csv"
 test_data = pd.read_csv(test_file_path)
 
 test_data_imputed = pd.DataFrame(imputer.transform(test_data), columns=test_data.columns)
@@ -262,6 +262,6 @@ for dataset_name, data_imputed in zip(['Validation', 'Test'], [val_data_imputed,
 
     # 儲存和顯示圖片
     plt.axis('square')
-    plt.savefig(f"C:/Users/jatenhsu/Desktop/ckdosteoporosis/ROC_Curve_Comparison_{dataset_name}.tiff", dpi=300)
+    plt.savefig(f"C:/...../ROC_Curve_Comparison_{dataset_name}.tiff", dpi=300)
     plt.show()
 
