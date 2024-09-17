@@ -9,7 +9,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # 匯入資料
-file_path = 'C:/Users/jatenhsu/Desktop/0830/Data.csv'
+file_path = 'C:/...../Data.csv'
 data = pd.read_csv(file_path)
 
 # 排除 Osteogenesis Imperfecta並計算所有其他特徵之間的相關性矩陣, drop 'Osteogenesis Imperfecta' due to All = 0
@@ -25,7 +25,7 @@ plt.yticks(fontsize=12)  # 調整 Y 軸標籤字體大小
 plt.tight_layout()
 
 # 儲存圖片
-output_path = 'C:/Users/jatenhsu/Desktop/ckdosteoporosis/feature_correlation_matrix_adjusted.png'
+output_path = 'C:/...../feature_correlation_matrix_adjusted.png'
 plt.savefig(output_path, dpi=300, bbox_inches='tight')
 plt.show()
 
@@ -35,7 +35,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # 匯入資料
-file_path = 'C:/Users/jatenhsu/Desktop/0830/Data.csv'
+file_path = 'C:/...../Data.csv'
 data = pd.read_csv(file_path)
 
 # 設定 outcome 和 features
@@ -62,7 +62,7 @@ plt.title('Correlation with Osteoporosis (Sorted by Correlation)')
 plt.tight_layout()
 
 # 儲存圖片
-output_path = 'C:/Users/jatenhsu/Desktop/ckdosteoporosis/correlation_matrix_sorted.png'
+output_path = 'C:/...../correlation_matrix_sorted.png'
 plt.savefig(output_path, dpi=300, bbox_inches='tight')
 plt.show()
 
@@ -75,7 +75,7 @@ from sklearn.inspection import permutation_importance
 import matplotlib.pyplot as plt
 
 # 匯入資料
-file_path = 'C:/Users/jatenhsu/Desktop/0830/Data.csv'
+file_path = 'C:/...../Data.csv'
 data = pd.read_csv(file_path)
 
 # 設定 outcome 和 features
@@ -120,7 +120,7 @@ plt.title('Top 10 important features')
 plt.tight_layout()
 
 # 儲存圖片
-output_path = 'C:/Users/jatenhsu/Desktop/ckdosteoporosis/feature_importance.png'
+output_path = 'C:/...../feature_importance.png'
 plt.savefig(output_path, dpi=300, bbox_inches='tight')
 plt.show()
 
@@ -172,7 +172,7 @@ plt.title('Number of Features vs. Cross-Validation Scores')
 plt.tight_layout()
 
 # 儲存圖片
-output_path_rfecv = 'C:/Users/jatenhsu/Desktop/ckdosteoporosis/rfecv_plot.png'
+output_path_rfecv = 'C:/...../rfecv_plot.png'
 plt.savefig(output_path_rfecv, dpi=300, bbox_inches='tight')
 plt.show()
 
