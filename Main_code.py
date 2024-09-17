@@ -24,7 +24,7 @@ import seaborn as sns
 import numpy as np
 
 # 1. 匯入資料
-train_file_path = "C:/Users/jatenhsu/Desktop/ckdosteoporosis/train_data.csv"
+train_file_path = "C:/...../train_data.csv"
 data = pd.read_csv(train_file_path)
 
 # 2. 分割資料，確保 "Osteoporosis" 比例接近
@@ -131,7 +131,7 @@ for model_name, model in models.items():
     print(f"{model_name}: Accuracy: {accuracy:.2f}, Precision: {precision:.2f}, Recall: {recall:.2f}, F1: {f1:.2f}, AUC: {auc:.2f}")
 
 # 7. 匯入 test_data，補缺失值與標準化
-test_file_path = "C:/Users/jatenhsu/Desktop/ckdosteoporosis/test_data.csv"
+test_file_path = "C:/...../test_data.csv"
 test_data = pd.read_csv(test_file_path)
 
 test_data_imputed = pd.DataFrame(imputer.transform(test_data), columns=test_data.columns)
@@ -212,10 +212,94 @@ for dataset_name, data_imputed in zip(['Validation', 'Test'], [val_data_imputed,
 
     # 儲存和顯示圖片
     plt.axis('square')
-    plt.savefig(f"C:/Users/jatenhsu/Desktop/ckdosteoporosis/ROC_Curve_Comparison_{dataset_name}.tiff", dpi=300)
+    plt.savefig(f"C:/...../ROC_Curve_Comparison_{dataset_name}.tiff", dpi=300)
+    plt.show()
+
+# 10. 繪製 Confusion Matrix (Validation 和 Test)
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
+
+def plot_confusion_matrix(y_true, y_pred, model_name, dataset_type):
+    cm = confusion_matrix(y_true, y_pred)
+    plt.figure(figsize=(7, 7))  # 增加圖片大小
+    sns.heatmap(cm, annot=True, fmt='g', cmap='Blues', cbar=False, square=True, 
+                annot_kws={"size": 24})  # 放大 heatmap 上的數字
+    plt.title(f'{model_name} Confusion Matrix ({dataset_type})', fontsize=20)  # 調整標題大小
+    plt.xlabel('Predicted', fontsize=18)  # 調整 X 軸標籤大小
+    plt.ylabel('True Label', fontsize=18)  # 調整 Y 軸標籤大小
+    plt.xticks(fontsize=18)  # 調整 X 軸數字大小
+    plt.yticks(fontsize=18)  # 調整 Y 軸數字大小
+    plt.savefig(f'C:/...../{model_name}_Confusion_Matrix_{dataset_type}.tiff', dpi=300)
     plt.show()
 
 
+for dataset_name, data_imputed in zip(['Validation', 'Test'], [val_data_imputed, test_data_imputed]):
+    for model_name, model in models.items():
+        if model_name == 'ANN':
+            ann_data_imputed = data_imputed[selected_features].values
+            preds = (model.predict(ann_data_imputed).ravel() >= 0.5).astype(int)  # ANN 特別處理
+        else:
+            preds = model.predict(data_imputed[selected_features])
+        plot_confusion_matrix(data_imputed["Osteoporosis"], preds, model_name, dataset_name)
+
+# 11. 繪製三個 predictive probabilities histogram (Validation 和 Test)
+import numpy as np
+
+def plot_three_histograms(y_true, y_probs, model_name, dataset_type):
+    plt.figure(figsize=(18, 6))  # 增加圖片大小
+
+    # 計算最大 Y 軸範圍
+    max_y = max(
+        np.histogram(y_probs[y_true == 0], bins=np.linspace(0, 1, 20))[0].max(),
+        np.histogram(y_probs[y_true == 1], bins=np.linspace(0, 1, 20))[0].max()
+    )
+
+    # 1. Not Osteoporosis 的直方圖
+    plt.subplot(1, 3, 1)
+    plt.hist(y_probs[y_true == 0], bins=np.linspace(0, 1, 20), alpha=0.5, label='Not Osteoporosis', color='blue')
+    plt.title(f'{model_name} Not Osteoporosis Probabilities\n({dataset_type})', fontsize=18)  # 放大標題
+    plt.xlabel('Predicted Probability', fontsize=16)  # 放大 X 軸標籤
+    plt.ylabel('Sample Count', fontsize=16)  # 放大 Y 軸標籤
+    plt.ylim(0, max_y)
+    plt.xticks(fontsize=14)  # 調整 X 軸數字大小
+    plt.yticks(fontsize=14)  # 調整 Y 軸數字大小
+
+    # 2. Osteoporosis 的直方圖
+    plt.subplot(1, 3, 2)
+    plt.hist(y_probs[y_true == 1], bins=np.linspace(0, 1, 20), alpha=0.5, label='Osteoporosis', color='green')
+    plt.title(f'{model_name} Osteoporosis Probabilities\n({dataset_type})', fontsize=18)  # 放大標題
+    plt.xlabel('Predicted Probability', fontsize=16)  # 放大 X 軸標籤
+    plt.ylabel('Sample Count', fontsize=16)  # 放大 Y 軸標籤
+    plt.ylim(0, max_y)
+    plt.xticks(fontsize=14)  # 調整 X 軸數字大小
+    plt.yticks(fontsize=14)  # 調整 Y 軸數字大小
+
+    # 3. Not Osteoporosis 和 Osteoporosis 的直方圖
+    plt.subplot(1, 3, 3)
+    plt.hist(y_probs[y_true == 0], bins=np.linspace(0, 1, 20), alpha=0.5, label='Not Osteoporosis', color='blue')
+    plt.hist(y_probs[y_true == 1], bins=np.linspace(0, 1, 20), alpha=0.5, label='Osteoporosis', color='green')
+    plt.title(f'{model_name} Combined Probabilities\n({dataset_type})', fontsize=18)  # 放大標題
+    plt.xlabel('Predicted Probability', fontsize=16)  # 放大 X 軸標籤
+    plt.ylabel('Sample Count', fontsize=16)  # 放大 Y 軸標籤
+    plt.ylim(0, max_y)
+    plt.xticks(fontsize=14)  # 調整 X 軸數字大小
+    plt.yticks(fontsize=14)  # 調整 Y 軸數字大小
+    plt.legend(fontsize=16)  # 調整圖例字體大小
+
+    # 保存圖片
+    plt.savefig(f'C:/...../{model_name}_Three_Histograms_{dataset_type}.tiff', dpi=300)
+    plt.show()
+
+
+for dataset_name, data_imputed in zip(['Validation', 'Test'], [val_data_imputed, test_data_imputed]):
+    for model_name, model in models.items():
+        if model_name == 'ANN':
+            ann_data_imputed = data_imputed[selected_features].values
+            probs = model.predict(ann_data_imputed).ravel()  # ANN 特別處理
+        else:
+            probs = model.predict_proba(data_imputed[selected_features])[:, 1]
+        plot_three_histograms(data_imputed["Osteoporosis"], probs, model_name, dataset_name)
 
 # 12. 計算測試集和驗證集的各項評估指標並匯出成CSV
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
@@ -347,9 +431,9 @@ for dataset_name, data_imputed in zip(['Validation', 'Test'], [val_data_imputed,
 
 # 將結果保存為 DataFrame 並匯出為 CSV
 metrics_df = pd.DataFrame(metrics_results)
-metrics_df.to_csv("C:/Users/jatenhsu/Desktop/ckdosteoporosis/classification_metrics_validation_test_grouped_with_ci.csv", index=False)
+metrics_df.to_csv("C:/...../classification_metrics_validation_test_grouped_with_ci.csv", index=False)
 
-print(f"Results with 95% CI saved to C:/Users/jatenhsu/Desktop/ckdosteoporosis/classification_metrics_validation_test_grouped_with_ci.csv")
+print(f"Results with 95% CI saved to C:/...../classification_metrics_validation_test_grouped_with_ci.csv")
 
 
 # Calibration Curve
@@ -395,7 +479,7 @@ plt.tick_params(axis='both', which='major', labelsize=16)  # 調整 X 和 Y 軸�
 plt.grid(False)
 
 # 保存圖片為TIFF格式，300dpi
-plt.savefig("C:/Users/jatenhsu/Desktop/ckdosteoporosis/Calibration_Curve.tiff", dpi=300, format='tiff')
+plt.savefig("C:/...../Calibration_Curve.tiff", dpi=300, format='tiff')
 
 # 顯示圖片
 plt.show()
@@ -470,7 +554,7 @@ def plot_decision_curve(results, test_data_imputed, selected_features, models, f
     plt.close()
 
 # 文件存儲路徑
-output_file_path = "C:/Users/jatenhsu/Desktop/ckdosteoporosis/decision_curve.tiff"
+output_file_path = "C:/...../decision_curve.tiff"
 
 # 調用函數，繪製決策曲線
 plot_decision_curve(results, test_data_imputed, selected_features, models, output_file_path)
